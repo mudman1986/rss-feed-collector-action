@@ -15,16 +15,16 @@ updates:
       - "github-actions"
     open-pull-requests-limit: 5
 
-  - package-ecosystem: "npm"
+  - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
     groups:
-      npm-dependencies:
+      pip-dependencies:
         patterns:
           - "*"
     labels:
       - "dependencies"
-      - "npm"
+      - "python"
     open-pull-requests-limit: 5
