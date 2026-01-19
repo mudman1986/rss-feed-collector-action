@@ -1,5 +1,8 @@
+---
 name: "Collect RSS Feeds"
-description: "Fetches RSS/Atom feeds and generates JSON output with articles from the last N hours"
+description: >-
+  Fetches RSS/Atom feeds and generates JSON output with
+  articles from the last N hours
 
 inputs:
   config-path:
@@ -57,7 +60,7 @@ runs:
           TOTAL_ARTICLES=$(jq -r '.summary.total_articles' "$OUTPUT_PATH")
           SUCCESSFUL_FEEDS=$(jq -r '.summary.successful_feeds' "$OUTPUT_PATH")
           FAILED_FEEDS=$(jq -r '.summary.failed_feeds' "$OUTPUT_PATH")
-          
+
           echo "total-articles=$TOTAL_ARTICLES" >> $GITHUB_OUTPUT
           echo "successful-feeds=$SUCCESSFUL_FEEDS" >> $GITHUB_OUTPUT
           echo "failed-feeds=$FAILED_FEEDS" >> $GITHUB_OUTPUT
