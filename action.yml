@@ -1,0 +1,88 @@
+name: "Collect RSS Feeds"
+description: "Fetches RSS/Atom feeds and generates JSON output with articles from the last N hours"
+
+inputs:
+  config-path:
+    description: "Path to RSS feeds JSON config file"
+    required: true
+  hours:
+    description: "Number of hours to look back for articles"
+    required: false
+    default: "24"
+  output-path:
+    description: "Path for output JSON file"
+    required: false
+    default: "feed-data.json"
+
+outputs:
+  output-file:
+    description: "Path to the generated JSON file"
+    value: ${{ steps.collect.outputs.output-file }}
+  total-articles:
+    description: "Total number of articles collected"
+    value: ${{ steps.collect.outputs.total-articles }}
+  successful-feeds:
+    description: "Number of successfully fetched feeds"
+    value: ${{ steps.collect.outputs.successful-feeds }}
+  failed-feeds:
+    description: "Number of failed feeds"
+    value: ${{ steps.collect.outputs.failed-feeds }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.x"
+
+    - name: Install dependencies
+      shell: bash
+      run: pip install feedparser
+
+    - name: Collect RSS feeds
+      id: collect
+      shell: bash
+      run: |
+        python3 "$GITHUB_ACTION_PATH/collect_feeds.py" \
+          --config "$CONFIG_PATH" \
+          --hours "$HOURS" \
+          --output "$OUTPUT_PATH"
+
+        # Set outputs
+        echo "output-file=$OUTPUT_PATH" >> $GITHUB_OUTPUT
+
+        # Extract summary information from the JSON
+        if [ -f "$OUTPUT_PATH" ]; then
+          TOTAL_ARTICLES=$(jq -r '.summary.total_articles' "$OUTPUT_PATH")
+          SUCCESSFUL_FEEDS=$(jq -r '.summary.successful_feeds' "$OUTPUT_PATH")
+          FAILED_FEEDS=$(jq -r '.summary.failed_feeds' "$OUTPUT_PATH")
+          
+          echo "total-articles=$TOTAL_ARTICLES" >> $GITHUB_OUTPUT
+          echo "successful-feeds=$SUCCESSFUL_FEEDS" >> $GITHUB_OUTPUT
+          echo "failed-feeds=$FAILED_FEEDS" >> $GITHUB_OUTPUT
+        else
+          echo "Error: Output file not created" >&2
+          exit 1
+        fi
+      env:
+        CONFIG_PATH: ${{ inputs.config-path }}
+        HOURS: ${{ inputs.hours }}
+        OUTPUT_PATH: ${{ inputs.output-path }}
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+
+    - name: Generate summary
+      shell: bash
+      run: |
+        # Generate markdown summary for GitHub workflow
+        python3 "$GITHUB_ACTION_PATH/generate_markdown_summary.py" \
+          --input "$OUTPUT_PATH" \
+          --output /tmp/summary.md
+
+        # Append markdown summary to GitHub Step Summary
+        cat /tmp/summary.md >> $GITHUB_STEP_SUMMARY
+
+        echo "Summary generated successfully"
+      env:
+        OUTPUT_PATH: ${{ inputs.output-path }}
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
