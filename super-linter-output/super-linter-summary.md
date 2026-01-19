@@ -13,7 +13,7 @@
 | PYTHON_FLAKE8              | Pass ✅           |
 | PYTHON_ISORT               | Pass ✅           |
 | PYTHON_MYPY                | Pass ✅           |
-| YAML                       | Fail ❌           |
+| YAML                       | Pass ✅           |
 | YAML_PRETTIER              | Pass ✅           |
 
-Super-linter detected linting errors
+All files and directories linted successfully
