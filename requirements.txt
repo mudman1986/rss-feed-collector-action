@@ -1,13 +1,13 @@
 # Core dependencies for RSS feed collection
-feedparser==6.0.11
+feedparser==6.0.12
 
 # Testing frameworks
-pytest==8.3.4
-pytest-cov==6.0.0
+pytest==9.0.2
+pytest-cov==7.0.0
 
 # Code formatters
-black==25.1.0
-isort==5.13.2
+black==26.1.0
+isort==7.0.0
 
 # Linters
 pylint==4.0.4
