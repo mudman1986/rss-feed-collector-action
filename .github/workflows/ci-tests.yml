@@ -1,0 +1,14 @@
+name: Test Action
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - run: pip install feedparser pytest pytest-cov
+      - run: pytest tests/ -v --cov
