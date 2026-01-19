@@ -41,11 +41,6 @@ jobs:
           VALIDATE_PYTHON_PYLINT: true
           VALIDATE_PYTHON_FLAKE8: true
           VALIDATE_PYTHON_MYPY: true
-          # JavaScript/TypeScript
-          VALIDATE_JAVASCRIPT_ES: true
-          VALIDATE_JAVASCRIPT_PRETTIER: true
-          VALIDATE_TYPESCRIPT_ES: true
-          VALIDATE_TYPESCRIPT_PRETTIER: true
           # JSON/YAML
           VALIDATE_JSON: true
           VALIDATE_JSON_PRETTIER: true
@@ -67,9 +62,7 @@ jobs:
           FIX_MARKDOWN: true
           FIX_MARKDOWN_PRETTIER: true
           FIX_YAML_PRETTIER: true
-          FIX_JAVASCRIPT_PRETTIER: true
           FIX_NATURAL_LANGUAGE: true
-          FIX_JAVASCRIPT_ES: true
 
       - name: Commit and Push Autofix Changes
         if: github.event_name == 'pull_request'
