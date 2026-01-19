@@ -1,0 +1,26 @@
+[MASTER]
+# Use multiple processes to speed up Pylint
+jobs=1
+
+[MESSAGES CONTROL]
+# Disable specific warnings that are too strict for our use case
+disable=
+    # Code is clear and well-organized, slight excess of local variables is acceptable
+    too-many-locals,
+    # Import outside toplevel is intentional for optional dependencies
+    import-outside-toplevel,
+    # Sometimes we need to catch broad exceptions for robustness
+    broad-exception-caught,
+    broad-exception-raised,
+    # Feedparser is installed at runtime in CI/CD environment
+    import-error,
+    # Test files need to modify sys.path before importing modules
+    wrong-import-position
+
+[FORMAT]
+# Maximum number of characters on a single line
+max-line-length=100
+
+[DESIGN]
+# Maximum number of local variables for function / method body
+max-locals=20
