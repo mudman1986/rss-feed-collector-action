@@ -12,6 +12,6 @@ jobs:
           python-version: '3.x'
       - run: ls
       - run: dir
-      - run: pip install requirements.txt
+      - run: pip install -r requirements.txt
       # - run: pip install feedparser pytest pytest-cov
       - run: pytest tests/ -v --cov
