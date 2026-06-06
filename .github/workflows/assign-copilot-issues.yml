@@ -66,6 +66,33 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6.0.2
 
+      - name: Ensure refactor label exists
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const labels = await github.paginate(
+              github.rest.issues.listLabelsForRepo,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100,
+              }
+            );
+
+            const hasRefactorLabel = labels.some(
+              (label) => label.name.toLowerCase() === "refactor"
+            );
+
+            if (!hasRefactorLabel) {
+              await github.rest.issues.createLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                name: "refactor",
+                color: "5319E7",
+                description: "Refactoring and codebase improvements",
+              });
+            }
+
       - name: Assign Copilot to issue
         uses: mudman1986/auto-assign-copilot-action@535b5c932eb8d95920db0d0c1b4271ba1e4b12d0 # v2.0.8
         with:
