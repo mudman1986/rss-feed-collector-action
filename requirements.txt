@@ -2,7 +2,7 @@
 feedparser==6.0.12
 
 # Testing frameworks
-pytest==9.0.3
+pytest==9.1.0
 pytest-cov==7.1.0
 
 # Code formatters
@@ -10,7 +10,7 @@ black==26.5.1
 isort==8.0.1
 
 # Linters
-pylint==4.0.5
+pylint==4.0.6
 flake8==7.3.0
 mypy==2.1.0
 
