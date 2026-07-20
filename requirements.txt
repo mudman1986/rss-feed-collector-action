@@ -2,7 +2,7 @@
 feedparser==6.0.12
 
 # Testing frameworks
-pytest==9.1.0
+pytest==9.1.1
 pytest-cov==7.1.0
 
 # Code formatters
@@ -12,7 +12,7 @@ isort==8.0.1
 # Linters
 pylint==4.0.6
 flake8==7.3.0
-mypy==2.1.0
+mypy==2.3.0
 
 # Type stubs for mypy
-types-requests==2.33.0.20260518
+types-requests==2.33.0.20260712
