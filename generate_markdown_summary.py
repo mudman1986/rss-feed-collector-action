@@ -60,7 +60,9 @@ def generate_markdown_summary(data: Dict[str, Any]) -> str:
                 summary.append("|-------|-----------|")
                 for article in feed_data["articles"][:10]:  # Limit to first 10
                     safe_title = escape_markdown_table_cell(article["title"])
-                    title = safe_title[:80] + "..." if len(safe_title) > 80 else safe_title
+                    title = (
+                        safe_title[:80] + "..." if len(safe_title) > 80 else safe_title
+                    )
                     safe_link = str(article["link"]).replace(")", "%29")
                     published = escape_markdown_table_cell(article["published"])
                     summary.append(f"| [{title}]({safe_link}) | {published} |")
