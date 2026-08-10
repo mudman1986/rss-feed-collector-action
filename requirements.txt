@@ -1,5 +1,5 @@
 # Core dependencies for RSS feed collection
-feedparser==6.0.12
+feedparser==6.0.14
 
 # Testing frameworks
 pytest==9.1.1
