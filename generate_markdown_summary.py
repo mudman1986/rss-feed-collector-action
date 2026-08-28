@@ -9,6 +9,17 @@ import json
 from typing import Any, Dict
 
 
+def escape_markdown_table_cell(value: Any) -> str:
+    """Escape content that is rendered inside markdown tables."""
+    text = str(value)
+    return (
+        text.replace("\\", "\\\\")
+        .replace("\r", " ")
+        .replace("\n", " ")
+        .replace("|", "\\|")
+    )
+
+
 def generate_markdown_summary(data: Dict[str, Any]) -> str:
     """
     Generate markdown summary from RSS feed collection data
@@ -41,20 +52,20 @@ def generate_markdown_summary(data: Dict[str, Any]) -> str:
     if data["feeds"]:
         summary.append("## ✅ Successful Feeds\n")
         for feed_name, feed_data in data["feeds"].items():
-            summary.append(f"### {feed_name}")
+            summary.append(f"### {escape_markdown_table_cell(feed_name)}")
             summary.append(f"- **Articles:** {feed_data['count']}")
 
             if feed_data["articles"]:
                 summary.append("\n| Title | Published |")
                 summary.append("|-------|-----------|")
                 for article in feed_data["articles"][:10]:  # Limit to first 10
+                    safe_title = escape_markdown_table_cell(article["title"])
                     title = (
-                        article["title"][:80] + "..."
-                        if len(article["title"]) > 80
-                        else article["title"]
+                        safe_title[:80] + "..." if len(safe_title) > 80 else safe_title
                     )
-                    published = article["published"]
-                    summary.append(f"| [{title}]({article['link']}) | {published} |")
+                    safe_link = str(article["link"]).replace(")", "%29")
+                    published = escape_markdown_table_cell(article["published"])
+                    summary.append(f"| [{title}]({safe_link}) | {published} |")
 
                 if feed_data["count"] > 10:
                     summary.append(
@@ -71,8 +82,10 @@ def generate_markdown_summary(data: Dict[str, Any]) -> str:
         summary.append("| Feed Name | URL | Error |")
         summary.append("|-----------|-----|-------|")
         for failed in data["failed_feeds"]:
-            error_reason = failed.get("error", "Unknown")
-            summary.append(f"| {failed['name']} | {failed['url']} | {error_reason} |")
+            feed_name = escape_markdown_table_cell(failed["name"])
+            feed_url = escape_markdown_table_cell(failed["url"])
+            error_reason = escape_markdown_table_cell(failed.get("error", "Unknown"))
+            summary.append(f"| {feed_name} | {feed_url} | {error_reason} |")
         summary.append("")
 
     return "\n".join(summary)
