@@ -1,5 +1,5 @@
 # Core dependencies for RSS feed collection
-feedparser==6.0.12
+feedparser==6.0.14
 
 # Testing frameworks
 pytest==9.1.1
@@ -7,12 +7,12 @@ pytest-cov==7.1.0
 
 # Code formatters
 black==26.5.1
-isort==8.0.1
+isort==9.0.1
 
 # Linters
-pylint==4.0.6
+pylint==4.0.8
 flake8==7.3.0
-mypy==2.3.0
+mypy==2.3.1
 
 # Type stubs for mypy
-types-requests==2.33.0.20260712
+types-requests==2.33.0.20260906
