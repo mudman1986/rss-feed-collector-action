@@ -38,7 +38,7 @@ class TestGenerateMarkdownSummary(unittest.TestCase):
                     "articles": [
                         {
                             "title": "Unsafe|Title\nRow [bracket]",
-                            "link": "https://example.com/path)",
+                            "link": "https://example.com/path(thing)",
                             "published": "2026-08-01T00:00:00Z|UTC",
                         }
                     ],
@@ -57,13 +57,42 @@ class TestGenerateMarkdownSummary(unittest.TestCase):
 
         self.assertIn("### Feed\\|Name", summary)
         self.assertIn(
-            "| [Unsafe\\|Title Row \\[bracket\\]](https://example.com/path%29) | 2026-08-01T00:00:00Z\\|UTC |",
+            "| [Unsafe\\|Title Row \\[bracket\\]](https://example.com/path%28thing%29) | 2026-08-01T00:00:00Z\\|UTC |",
             summary,
         )
         self.assertIn(
             "| Failed\\|Feed | https://bad.example/a\\|b | boom broken |",
             summary,
         )
+
+    def test_generate_markdown_summary_truncates_before_escaping(self):
+        """Truncation should happen before markdown escaping to avoid broken escape sequences."""
+        data = {
+            "metadata": {"collected_at": "2026-08-01T00:00:00Z", "hours": 24},
+            "summary": {
+                "total_feeds": 1,
+                "successful_feeds": 1,
+                "failed_feeds": 0,
+                "total_articles": 1,
+            },
+            "feeds": {
+                "Feed": {
+                    "count": 1,
+                    "articles": [
+                        {
+                            "title": "A" * 76 + "[B" + "C" * 5,
+                            "link": "https://example.com/path",
+                            "published": "2026-08-01T00:00:00Z",
+                        }
+                    ],
+                }
+            },
+            "failed_feeds": [],
+        }
+
+        summary = generate_markdown_summary(data)
+
+        self.assertIn(f"{'A' * 76}\\[...", summary)
 
 
 if __name__ == "__main__":

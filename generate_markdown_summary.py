@@ -8,6 +8,9 @@ import argparse
 import json
 from typing import Any, Dict
 
+MAX_TITLE_LENGTH = 80
+ELLIPSIS = "..."
+
 
 def escape_markdown_table_cell(value: Any) -> str:
     """Escape content that is rendered inside markdown tables."""
@@ -61,13 +64,16 @@ def generate_markdown_summary(data: Dict[str, Any]) -> str:
                 summary.append("\n| Title | Published |")
                 summary.append("|-------|-----------|")
                 for article in feed_data["articles"][:10]:  # Limit to first 10
-                    safe_title = escape_markdown_table_cell(article["title"])
+                    raw_title = str(article["title"])
                     title = (
-                        safe_title[:80] + "..." if len(safe_title) > 80 else safe_title
+                        raw_title[: MAX_TITLE_LENGTH - len(ELLIPSIS)] + ELLIPSIS
+                        if len(raw_title) > MAX_TITLE_LENGTH
+                        else raw_title
                     )
-                    safe_link = str(article["link"]).replace(")", "%29")
+                    safe_title = escape_markdown_table_cell(title)
+                    safe_link = str(article["link"]).replace("(", "%28").replace(")", "%29")
                     published = escape_markdown_table_cell(article["published"])
-                    summary.append(f"| [{title}]({safe_link}) | {published} |")
+                    summary.append(f"| [{safe_title}]({safe_link}) | {published} |")
 
                 if feed_data["count"] > 10:
                     summary.append(
