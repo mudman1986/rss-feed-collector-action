@@ -16,6 +16,8 @@ def escape_markdown_table_cell(value: Any) -> str:
         text.replace("\\", "\\\\")
         .replace("\r", " ")
         .replace("\n", " ")
+        .replace("[", "\\[")
+        .replace("]", "\\]")
         .replace("|", "\\|")
     )
 

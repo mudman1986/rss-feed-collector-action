@@ -19,8 +19,8 @@ class TestGenerateMarkdownSummary(unittest.TestCase):
 
     def test_escape_markdown_table_cell(self):
         """Table cell content should be escaped and single-line."""
-        escaped = escape_markdown_table_cell("line1\nline2|part\\x")
-        self.assertEqual(escaped, "line1 line2\\|part\\\\x")
+        escaped = escape_markdown_table_cell("line1\nline2|part\\x [bracket]")
+        self.assertEqual(escaped, "line1 line2\\|part\\\\x \\[bracket\\]")
 
     def test_generate_markdown_summary_escapes_dynamic_cells(self):
         """Summary should escape table-breaking characters in content."""
@@ -37,7 +37,7 @@ class TestGenerateMarkdownSummary(unittest.TestCase):
                     "count": 1,
                     "articles": [
                         {
-                            "title": "Unsafe|Title\nRow",
+                            "title": "Unsafe|Title\nRow [bracket]",
                             "link": "https://example.com/path)",
                             "published": "2026-08-01T00:00:00Z|UTC",
                         }
@@ -57,7 +57,7 @@ class TestGenerateMarkdownSummary(unittest.TestCase):
 
         self.assertIn("### Feed\\|Name", summary)
         self.assertIn(
-            "| [Unsafe\\|Title Row](https://example.com/path%29) | 2026-08-01T00:00:00Z\\|UTC |",
+            "| [Unsafe\\|Title Row \\[bracket\\]](https://example.com/path%29) | 2026-08-01T00:00:00Z\\|UTC |",
             summary,
         )
         self.assertIn(
