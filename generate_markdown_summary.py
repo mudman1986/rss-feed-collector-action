@@ -71,7 +71,9 @@ def generate_markdown_summary(data: Dict[str, Any]) -> str:
                         else raw_title
                     )
                     safe_title = escape_markdown_table_cell(title)
-                    safe_link = str(article["link"]).replace("(", "%28").replace(")", "%29")
+                    safe_link = (
+                        str(article["link"]).replace("(", "%28").replace(")", "%29")
+                    )
                     published = escape_markdown_table_cell(article["published"])
                     summary.append(f"| [{safe_title}]({safe_link}) | {published} |")
 
