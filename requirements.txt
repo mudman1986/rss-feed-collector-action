@@ -7,11 +7,11 @@ pytest-cov==7.1.0
 
 # Code formatters
 black==26.5.1
-isort==9.0.1
+isort==9.0.2
 
 # Linters
-pylint==4.0.8
-flake8==7.3.0
+pylint==4.0.9
+flake8==7.4.1
 mypy==2.3.1
 
 # Type stubs for mypy
