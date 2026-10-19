@@ -57,7 +57,8 @@ class TestGenerateMarkdownSummary(unittest.TestCase):
 
         self.assertIn("### Feed\\|Name", summary)
         self.assertIn(
-            "| [Unsafe\\|Title Row \\[bracket\\]](https://example.com/path%28thing%29) | 2026-08-01T00:00:00Z\\|UTC |",
+            "| [Unsafe\\|Title Row \\[bracket\\]](https://example.com/path%28thing%29) "
+            "| 2026-08-01T00:00:00Z\\|UTC |",
             summary,
         )
         self.assertIn(
