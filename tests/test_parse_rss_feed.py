@@ -6,7 +6,7 @@ Unit tests for parse_rss_feed function in collect_feeds.py
 import os
 import sys
 import unittest
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import MagicMock, patch
 
 # Add parent directory to path to import the module
@@ -179,6 +179,39 @@ class TestParseRssFeed(unittest.TestCase):
         self.assertEqual(len(articles), 1)
         self.assertEqual(articles[0]["title"], "No Date Article")
         self.assertEqual(articles[0]["published"], "Unknown")
+
+    @patch("collect_feeds.urlopen")
+    @patch("collect_feeds.feedparser.parse")
+    def test_parse_feed_handles_timezone_aware_since_time(
+        self, mock_feedparser, mock_urlopen
+    ):
+        """Timezone-aware thresholds should compare correctly with feed dates."""
+        mock_response = MagicMock()
+        mock_response.read.return_value = b"<rss>mock feed content</rss>"
+        mock_response.__enter__.return_value = mock_response
+        mock_response.__exit__.return_value = None
+        mock_urlopen.return_value = mock_response
+
+        mock_feed = MagicMock()
+        mock_feed.bozo = False
+
+        recent_entry = MagicMock()
+        recent_entry.get.side_effect = lambda key, default=None: {
+            "title": "Recent Article",
+            "link": "https://example.com/recent",
+        }.get(key, default)
+        recent_entry.published_parsed = (2026, 1, 8, 12, 0, 0, 0, 0, 0)
+        type(recent_entry).updated_parsed = property(lambda self: None)
+
+        mock_feed.entries = [recent_entry]
+        mock_feedparser.return_value = mock_feed
+
+        since_time = datetime(2026, 1, 6, 0, 0, 0, tzinfo=timezone.utc)
+        articles, error = parse_rss_feed("https://example.com/feed.xml", since_time)
+
+        self.assertIsNone(error)
+        self.assertEqual(len(articles), 1)
+        self.assertEqual(articles[0]["title"], "Recent Article")
 
     @patch("collect_feeds.urlopen")
     def test_parse_feed_network_error(self, mock_urlopen):

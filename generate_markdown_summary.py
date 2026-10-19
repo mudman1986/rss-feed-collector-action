@@ -36,17 +36,17 @@ def generate_markdown_summary(data: Dict[str, Any]) -> str:
         Markdown formatted string
     """
     summary = []
-    summary.append("# 📰 DevOps Feed Hub Summary\n")
-    summary.append(f"**Collected at:** {data['metadata']['collected_at']}\n")
+    summary.append("# 📰 DevOps Feed Hub Summary")
+    summary.append(f"**Collected at:** {data['metadata']['collected_at']}")
     hours = data["metadata"].get("hours", 24)
-    summary.append(f"**Time range:** Last {hours} hours\n")
+    summary.append(f"**Time range:** Last {hours} hours")
     summary.append(
-        "**Note:** Web interface provides filtering for 1 day, 7 days, or 30 days\n"
+        "**Note:** Web interface provides filtering for 1 day, 7 days, or 30 days"
     )
     summary.append("")
 
     # Overall summary
-    summary.append("## 📊 Summary\n")
+    summary.append("## 📊 Summary")
     summary.append(f"- **Total feeds:** {data['summary']['total_feeds']}")
     summary.append(f"- **Successful:** {data['summary']['successful_feeds']}")
     summary.append(f"- **Failed:** {data['summary']['failed_feeds']}")

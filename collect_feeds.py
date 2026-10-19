@@ -15,6 +15,13 @@ from urllib.request import Request, urlopen
 import feedparser
 
 
+def _to_utc_naive(value: datetime) -> datetime:
+    """Normalize a datetime to a timezone-naive UTC value for comparisons."""
+    if value.tzinfo is not None:
+        return value.astimezone(timezone.utc).replace(tzinfo=None)
+    return value.replace(tzinfo=None)
+
+
 def parse_rss_feed(
     url: str, since_time: datetime
 ) -> Tuple[Optional[List[Dict[str, Any]]], Optional[str]]:
@@ -63,9 +70,9 @@ def parse_rss_feed(
 
             # Filter by date if available
             if pub_date:
-                # Convert to naive UTC for comparison
-                pub_date_naive = pub_date.replace(tzinfo=None)
-                if pub_date_naive > since_time:
+                pub_date_naive = _to_utc_naive(pub_date)
+                since_time_naive = _to_utc_naive(since_time)
+                if pub_date_naive > since_time_naive:
                     articles.append(
                         {
                             "title": title,
